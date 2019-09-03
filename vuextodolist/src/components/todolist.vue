@@ -1,83 +1,195 @@
 <template>
-  <nav class="TodoList">
-    <section class="main">
+  <div class="todolist">
       <article>
         <h2>Jquery To Do List</h2>
         <p>
           <em>Simple Todo List with adding and filter by diff status.</em>
         </p>
       </article>
-      <article>
-        <input class="input-text" type="text" name="ListItem" />
-        <div id="button">Add</div>
-      </article>
-      <article class="list"></article>
-      <article class="bottom">
-        <div>All</div>
-        <div>Active</div>
-        <div>complete</div>
-      </article>
-    </section>
-  </nav>
+       <div>
+            <label><input class="input-text" type="text" name="ListItem" id="ListItem"></label>
+            <div id="button" v-on:click="commit">Add</div>
+        </div>
+        <br/>
+
+        <ol>
+            <li v-for="index in getMessagesNum()" v-bind:key="index" :class="{'checked': $store.getters.getButtonsByIndex(index)===true}">
+                <label><input name="done-todo" type="checkbox" class="done-todo" v-model="$store.state.buttons[index-1]"></label>
+                <span contenteditable="true" class="done-todo">{{$store.getters.getMessagesByIndex(index)}}</span>
+            </li>
+        </ol>
+
+        <div>
+            <ul id="filters">
+                <li>
+                    <a href="#" data-filter="all">ALL</a>
+                </li>
+                <li>
+                    <a href="#" data-filter="active">Active</a>
+                </li>
+                <li>
+                    <a href="#" data-filter="complete" v-on:click="clear">Complete</a>
+                </li>
+            </ul>
+
+        </div>
+</div>
 </template>
 
 <script type="text/ecmascript-6">
 export default {
-  name: "TodoList",
-  data() {
-    return {};
-  },
-  components: {}
-};
+
+        name: 'todolist',
+        data(){
+            return{
+                isChecked: false
+            }
+        },
+        methods:{
+
+            commit(){
+                let message = document.getElementById("ListItem").value;
+                this.$store.commit('pushMessages',message);
+                this.$store.commit('pushButtons',false);
+            },
+            getMessagesNum(){
+                return this.$store.getters.getMessages().length;
+            }
+
+        }
+
+    }
 </script>
 
 <style scoped>
-.TodoList {
-  display: flex;
-  justify-content: center;
-}
-.main {
-  padding: 20px;
-  width: 400px;
-  background: white;
-  border-radius: 5px;
-}
+  h2 {
+        display: block;
+        font-size: 1.5em;
+        margin-block-start: 0.83em;
+        margin-block-end: 0.83em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        font-weight: bold;
+    }
+    p {
+        display: block;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+    }
+    i, cite, em, var, address, dfn {
+        font-style: italic;
+    }
+    .list{
+        padding: 20px;
+        width: 400px;
+        margin: 0 auto;
+        margin-top: 40px;
+        background: white;
+        border-radius: 5px;
+    }
+    .input-text {
+        width: 70%;
+    }
+    input {
+        padding: 4px 15px 4px 0;
+        background-color: white;
+        -webkit-rtl-ordering: logical;
+        cursor: text;
+        border-width: 3px;
+        border-style: inset;
+        border-color: initial;
+        border-image: initial;
+        text-rendering: auto;
+        color: initial;
+        letter-spacing: normal;
+        word-spacing: normal;
+        text-transform: none;
+        text-indent: 0px;
+        text-shadow: none;
+        display: inline-block;
+        text-align: start;
+        margin: 0em;
+        font: 400 13.3333px Arial;
+    }
+    #button:hover {
+        cursor: pointer;
+        opacity: .8;
+    }
+    #button {
+        display: inline-block;
+        background-color: #fc999b;
+        color: #ffffff;
+        border-radius: 5px;
+        text-align: center;
+        margin-top: 2px;
+        padding: 5px 15px;
+    }
+    ol {
+        padding-left: 20px;
+        display: block;
+        list-style-type: decimal;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        padding-inline-start: 40px;
 
-.input-text {
-  width: 70%;
-}
-input {
-  padding: 4px 15px 4px 0;
-}
-#button {
-  display: inline-block;
-  background-color: #fc999b;
-  color: #ffffff;
-  border-radius: 5px;
-  text-align: center;
-  margin-top: 2px;
-  padding: 5px 15px;
-}
-#button:hover {
-  opacity:0.7;
-  cursor: pointer;
-}
-.list {
-  margin: 20px;
-}
-.bottom {
-  display: flex;
-  flex-wrap: nowrap;
-  align-content: center;
-}
-.bottom div {
-  padding: 10px;
-  margin: 5px 10px;
-  color: #fc999b;
-}
-.bottom div:hover {
-  border: 1px solid;
-  border-radius: 3px;
-  cursor: pointer;
-}
+    }
+    li {
+        padding: 5px;
+        color: #000;
+        display: list-item;
+        text-align: -webkit-match-parent;
+    }
+    ol li {
+        padding: 5px;
+        color: #000;
+    }
+    .checked {
+        color: #999;
+        text-decoration: line-through;
+    }
+    #filters {
+        text-align: center;
+        margin-bottom: -10px;
+        margin-top: 40px;
+    }
+
+    #filters li a {
+        color: #fc999b;
+        text-decoration: none;
+        border: 1px solid transparent;
+        border-radius: 3px;
+
+    }
+    a{
+        margin: 3px;
+        padding: 3px 7px;
+    }
+    #filters li {
+        display: inline;
+        margin: 0 0 5px 0;
+        padding: 8px;
+        list-style: none;
+        outline: none;
+    }
+    ul, menu, dir {
+        display: block;
+        list-style-type: disc;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        padding-inline-start: 40px;
+    }
+    .done-todo{
+        cursor:pointer;
+        margin: 5px 5px 2px 0;
+    }
+    span{
+        word-break: break-all;
+        width: 70%;
+    }
 </style>
