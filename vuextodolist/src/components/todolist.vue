@@ -28,7 +28,7 @@
                     <a href="#" data-filter="active">Active</a>
                 </li>
                 <li>
-                    <a href="#" data-filter="complete" v-on:click="clear">Complete</a>
+                    <a href="#" data-filter="complete">Complete</a>
                 </li>
             </ul>
 
